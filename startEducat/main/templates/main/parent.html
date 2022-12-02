@@ -1,0 +1,29 @@
+{% load static %}
+
+
+
+<!DOCTYPE html>
+<html>
+<header>
+    <meta charset="utf-8">
+    <title> World of super advertising </title>
+    <link rel="stylesheet" href=" {% static 'main/css/index.css' %} ">
+</header>
+<body bgcolor="#E4E4E4">
+    <aside>
+        <span>heroes</span>
+        <h3>navigation</h3>
+        <ul>
+            <a href="{% url 'home' %}"><li>главная</li></a>
+            <a href="{% url 'about' %}"><li>о нас</li></a>
+            <a href=""><li>навигация</li></a>
+        </ul>
+    </aside>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+
+</body>
+</html>

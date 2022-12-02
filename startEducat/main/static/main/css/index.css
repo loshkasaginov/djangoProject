@@ -1,0 +1,59 @@
+html, body{
+    height: 100%;
+    font-display: 12px;
+    padding: 20px;
+    margin: 10px;
+}
+
+#header{
+    height: 300px;
+    text-align: center;
+    background-color: black;
+}
+
+.hear{
+    width: 300px;
+    height: 300px;
+}
+
+.images{
+    height: 300px;
+    width: 300px
+}
+
+.logof{
+    width: 70px;
+    height: 70px;
+}
+
+#container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.item{
+    padding: 12px /*отступы от края картинки до рамки*/;
+    border: 2px solid black; /* ramka*/
+    margin: 5px; /*отступы от краев объектов одного элемента*/
+    background-color: white;
+    border-radius: 10px;
+
+
+}
+
+.item:hover{
+    background-color: black;
+    color: white;
+    padding: 14px
+}
+
+aside{
+    float:left;
+    background:grey;
+    width:15%;
+    padding:2.5%;
+    height:100vh;
+    border-right:5px solid #4d4d4d;
+}
