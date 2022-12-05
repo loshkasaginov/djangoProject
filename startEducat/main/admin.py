@@ -15,3 +15,10 @@ class CPUAdmin(admin.ModelAdmin):
 
 admin.site.register(CPUmanufacturer, CPUmanufacturerAdmin)
 admin.site.register(CPU, CPUAdmin)
+
+#"/"
+#"/about"
+#"/products/cpu"
+#"/products/manufacturer"
+#"/products/cpu/<id>"
+#"/products/manufacturer/<id>"

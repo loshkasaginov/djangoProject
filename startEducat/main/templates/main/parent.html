@@ -16,11 +16,13 @@
         <ul>
             <a href="{% url 'home' %}"><li>главная</li></a>
             <a href="{% url 'about' %}"><li>о нас</li></a>
-            <a href=""><li>навигация</li></a>
+            <a href="{% url 'cpus' %}"><li>процессоры</li></a>
         </ul>
     </aside>
     <main>
         {% block content %}
+        {% endblock %}
+        {% block endpage %}
         {% endblock %}
     </main>
 

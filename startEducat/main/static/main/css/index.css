@@ -39,8 +39,6 @@ html, body{
     margin: 5px; /*отступы от краев объектов одного элемента*/
     background-color: white;
     border-radius: 10px;
-
-
 }
 
 .item:hover{
