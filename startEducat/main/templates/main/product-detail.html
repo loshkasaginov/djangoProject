@@ -1,0 +1,13 @@
+{% extends 'main/parent.html' %}
+
+{% block content %}
+<p><strong>name:</strong> {{ product.product_name }}</p>
+<p><strong>description:</strong> {{ product.product_description }}</p>
+<a href="{% url 'product_manufacturer-detail' product.product_manufacturer.pk %}">{{ product.product_manufacturer }}</a>
+<p><strong>Price:</strong> {{ product.product_price }}</p>
+{% if product.product_image %}
+<div>
+    <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}"/>
+</div>
+{% endif %}
+{% endblock %}
