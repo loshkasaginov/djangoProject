@@ -5,8 +5,11 @@
 {% if cpu_list %}
 {% for cpu in cpu_list %}
       <div class="item">
-        <a href="{{ cpu.get_absolute_url }}">{{ cpu.cpuName }}</a>
+          <a href="{{ cpu.get_absolute_url }}">{{ cpu.cpuName }}</a>
           ({{cpu.cpuPrice}})
+          {% if cpu.cpuImage %}
+          <img src="{{ cpu.cpuImage.url }}" alt="{{ cpu.cpuName }} image"/>
+          {% endif %}
       </div>
 {% endfor %}
 {% else %}

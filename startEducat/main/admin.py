@@ -10,7 +10,10 @@ class CPUmanufacturerAdmin(admin.ModelAdmin):
 
 
 class CPUAdmin(admin.ModelAdmin):
-    list_display = ('id', 'cpuName', 'cpuManufacturer', 'cpuPrice', 'timeCpuCreated')
+    # Ваши существующие настройки, если есть
+    list_display = ('id', 'cpuName', 'cpuManufacturer', 'cpuPrice', 'cpuImage', 'timeCpuCreated')
+    # Добавьте поле cpuImage в fields
+    fields = ['cpuName', 'cpuDescription', 'cpuManufacturer', 'cpuPrice', 'cpuImage']
 
 
 admin.site.register(CPUmanufacturer, CPUmanufacturerAdmin)

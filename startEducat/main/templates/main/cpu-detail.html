@@ -5,5 +5,9 @@
 <p><strong>description:</strong> {{ cpu.cpuDescription }}</p>
 <a href="{% url 'cpumanufac-detail' cpu.cpuManufacturer.pk %}">{{ cpu.cpuManufacturer }}</a>
 <p><strong>Price:</strong> {{ cpu.cpuPrice }}</p>
-
+{% if cpu.cpuImage %}
+<div>
+    <img src="{{ cpu.cpuImage.url }}" alt="{{ cpu.cpuName }}"/>
+</div>
+{% endif %}
 {% endblock %}

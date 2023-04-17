@@ -2,13 +2,14 @@ from django.db import models
 from django.urls import reverse
 
 
-class CPUmanufacturer(models.Model):
+class manufacturer(models.Model):
     class Meta:
         db_table = "СpuManufacturer"
         verbose_name = "производитель процессоров"
         verbose_name_plural = "производители процессоров"
 
-    cpuManufacturer = models.CharField(max_length=100, help_text="Enter cpu manufacturer name", verbose_name="производитель")
+    cpuManufacturer = models.CharField(max_length=100, help_text="Enter cpu manufacturer name",
+                                       verbose_name="производитель")
     timeCpuManufacturerCreated = models.DateField(auto_now_add=True, verbose_name="время создания Производителя")
 
     def __str__(self):
@@ -29,6 +30,7 @@ class CPU(models.Model):
     cpuManufacturer = models.ForeignKey('CPUmanufacturer', on_delete=models.CASCADE, verbose_name="внешняя ссылка на производителя")
     cpuPrice = models.IntegerField(verbose_name="цена центрального процессора")
     timeCpuCreated = models.DateField(auto_now_add=True, verbose_name="время создания ЦП")
+    cpuImage = models.ImageField(upload_to='cpus/', null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse('cpu-detail', args=[str(self.id)])
