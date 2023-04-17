@@ -7,9 +7,10 @@ from django.urls import re_path
 urlpatterns = [
     path('', views.index, name='home'),
     path('about/', views.about, name='about'),
-    path('cpus/', views.Cpus.as_view(), name='cpus'),
-    re_path(r'^cpu/(?P<pk>.*)$', views.CpuDetailView.as_view(), name='cpu-detail'),
-    re_path(r'^cpumanufac/(?P<pk>.*)$', views.CpumanufacDetailView.as_view(), name='cpumanufac-detail'),
+    path('products/', views.Products.as_view(), name='products'),
+    re_path(r'^product/(?P<pk>.*)$', views.ProductDetailView.as_view(), name='product-detail'),
+    re_path(r'^product_manufacturer/(?P<pk>.*)$', views.ProductManufacturerDetailView.as_view(),
+            name='product_manufacturer-detail'),
 ]
 
 if settings.DEBUG:

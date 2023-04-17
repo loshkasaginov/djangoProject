@@ -2,26 +2,27 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from .models import CPUmanufacturer, CPU
+from .models import Product_manufacturer, Product
 
 
-class CPUmanufacturerAdmin(admin.ModelAdmin):
-    list_display = ('id', 'cpuManufacturer', 'timeCpuManufacturerCreated')
+class ProductmanufacturerAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product_manufacturer', 'time_manufacturer_created')
 
 
-class CPUAdmin(admin.ModelAdmin):
+class ProductAdmin(admin.ModelAdmin):
     # Ваши существующие настройки, если есть
-    list_display = ('id', 'cpuName', 'cpuManufacturer', 'cpuPrice', 'cpuImage', 'timeCpuCreated')
+    list_display = (
+    'id', 'product_name', 'product_manufacturer', 'product_price', 'product_image', 'time_product_created')
     # Добавьте поле cpuImage в fields
-    fields = ['cpuName', 'cpuDescription', 'cpuManufacturer', 'cpuPrice', 'cpuImage']
+    fields = ['product_name', 'product_description', 'product_manufacturer', 'product_price', 'product_image']
 
 
-admin.site.register(CPUmanufacturer, CPUmanufacturerAdmin)
-admin.site.register(CPU, CPUAdmin)
+admin.site.register(Product_manufacturer, ProductmanufacturerAdmin)
+admin.site.register(Product, ProductAdmin)
 
-#"/"
-#"/about"
-#"/products/cpu"
-#"/products/manufacturer"
-#"/products/cpu/<id>"
-#"/products/manufacturer/<id>"
+# "/"
+# "/about"
+# "/products/cpu"
+# "/products/manufacturer"
+# "/products/cpu/<id>"
+# "/products/manufacturer/<id>"

@@ -1,15 +1,15 @@
 from django.shortcuts import render
-from .models import CPU, CPUmanufacturer
+from .models import Product, Product_manufacturer
 from django.views import generic
 
 
 def index(request):
-    num_cpu = CPU.objects.all().count()
-    num_cpumanufaturer = CPUmanufacturer.objects.all().count()
+    num_product = Product.objects.all().count()
+    num_product_manufacturer = Product_manufacturer.objects.all().count()
     return render(request,
                   'main/index.html',
                   context={
-                      'num_cpu': num_cpu, 'num_cpumanufacturer': num_cpumanufaturer
+                      'num_product': num_product, 'num_product_manufacturer': num_product_manufacturer
                   })
 
 
@@ -17,19 +17,19 @@ def about(request):
     return render(request, 'main/about.html',)
 
 
-class Cpus(generic.ListView):
-    model = CPU
+class Products(generic.ListView):
+    model = Product
     # context_object_name = 'my_cpu_list'
     # queryset = CPU.objects.all()
-    template_name = 'main/cpus.html'
+    template_name = 'main/products.html'
     paginate_by = 10
 
 
-class CpuDetailView(generic.DetailView):
-    model = CPU
-    template_name = 'main/cpu-detail.html'
+class ProductDetailView(generic.DetailView):
+    model = Product
+    template_name = 'main/product-detail.html'
 
 
-class CpumanufacDetailView(generic.DetailView):
-    model = CPUmanufacturer
-    template_name = 'main/cpumanufac-detail.html'
+class ProductManufacturerDetailView(generic.DetailView):
+    model = Product_manufacturer
+    template_name = 'main/product_manufacturer-detail.html'
