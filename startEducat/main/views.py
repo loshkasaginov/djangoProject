@@ -1,28 +1,46 @@
 from django.shortcuts import render
 from .models import Product, Product_manufacturer
 from django.views import generic
+from django.db.models import Q
 
 
 def index(request):
-    num_product = Product.objects.all().count()
-    num_product_manufacturer = Product_manufacturer.objects.all().count()
-    return render(request,
-                  'main/index.html',
-                  context={
-                      'num_product': num_product, 'num_product_manufacturer': num_product_manufacturer
-                  })
+    products = Product.objects.all()[:5]
+    return render(request, 'main/index.html', {'products': products})
+
+
+def product_list(request):
+    search_query = request.GET.get('search', '')
+    if search_query:
+        products = Product.objects.filter(product_name__icontains=search_query)
+    else:
+        products = Product.objects.all()
+    return render(request, 'main/products.html', {'products': products, 'search_query': search_query})
+
+
+def product_detail(request, pk):
+    product = Product.objects.get(pk=pk)
+    return render(request, 'main/product-detail.html', {'product': product})
 
 
 def about(request):
-    return render(request, 'main/about.html',)
+    return render(request, 'main/about.html', )
 
 
 class Products(generic.ListView):
     model = Product
-    # context_object_name = 'my_cpu_list'
-    # queryset = CPU.objects.all()
     template_name = 'main/products.html'
-    paginate_by = 10
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        search_query = self.request.GET.get('search', '')
+        if search_query:
+            queryset = Product.objects.filter(
+                Q(product_name__icontains=search_query)
+            )
+        else:
+            queryset = Product.objects.all()
+        return queryset
 
 
 class ProductDetailView(generic.DetailView):

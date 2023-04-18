@@ -1,43 +1,14 @@
 {% extends 'main/parent.html' %}
 
-{% load static %}
-
-
 {% block content %}
-<div id="header">
-<img class="hear" src="{% static 'main/images/logo.png' %} " alt="logo" title="I am best logo">
-<h1> Super advertising agency </h1>
-<h2> Choose hero of your advertising campaign </h2>
-<div id="container">
-    <div class="item">
-        <h3>Woman cat</h3>
-        <img class="images" src="{% static 'main/images/cat.jpg' %}">
+<div class="products-container">
+    {% for product in products %}
+    <div class="product-card">
+        <h3>{{ product.product_name }}</h3>
+        <p>{{ product.product_manufacturer }}</p>
+        <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}" class="product-image"/>
+        <a href="{{ product.get_absolute_url }}">Подробнее</a>
     </div>
-    <div class="item">
-        <h3>AquaMan</h3>
-        <img class="images" src="{% static 'main/images/aq.jpg' %} ">
-    </div>
-    <div class="item">
-        <h3>Halk</h3>
-        <img class="images" src="{% static 'main/images/green.jpg' %}">
-    </div>
-    <div class="item">
-        <h3>Capitan of America</h3>
-        <img class="images" src="{% static 'main/images/ka.jpg' %}">
-    </div>
-    <div class="item">
-        <h3>Superman</h3>
-        <img class="images" src="{% static 'main/images/sup.jpg' %}">
-    </div>
-    <div class="item">
-        <h3>Iron Man</h3>
-        <img class="images" src="{% static 'main/images/ts.jpg' %}">
-    </div>
-    <div class="item">
-        <li><strong>product:</strong> {{ num_product }}</li>
-        <li><strong>product manufacture:</strong> {{ num_product_manufacturer }}</li>
-    </div>
+    {% endfor %}
 </div>
-</div>
-
 {% endblock %}

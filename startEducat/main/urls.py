@@ -5,9 +5,10 @@ from django.conf.urls.static import static
 from django.urls import re_path
 
 urlpatterns = [
-    path('', views.index, name='home'),
+    path('', views.index, name='index'),
     path('about/', views.about, name='about'),
     path('products/', views.Products.as_view(), name='products'),
+
     re_path(r'^product/(?P<pk>.*)$', views.ProductDetailView.as_view(), name='product-detail'),
     re_path(r'^product_manufacturer/(?P<pk>.*)$', views.ProductManufacturerDetailView.as_view(),
             name='product_manufacturer-detail'),

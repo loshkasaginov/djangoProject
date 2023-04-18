@@ -1,13 +1,23 @@
 {% extends 'main/parent.html' %}
 
 {% block content %}
-<p><strong>name:</strong> {{ product.product_name }}</p>
-<p><strong>description:</strong> {{ product.product_description }}</p>
-<a href="{% url 'product_manufacturer-detail' product.product_manufacturer.pk %}">{{ product.product_manufacturer }}</a>
-<p><strong>Price:</strong> {{ product.product_price }}</p>
-{% if product.product_image %}
-<div>
-    <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}"/>
+<div class="product-detail-container">
+    <div class="product-detail-image">
+        <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}" class="product-image-large"
+             id="product-image"/>
+    </div>
+    <div class="product-detail-info">
+        <h2>{{ product.product_name }}</h2>
+        <p>{{ product.product_description }}</p>
+        <p>Производитель: {{ product.product_manufacturer }}</p>
+        <p>Цена: {{ product.product_price }}</p>
+    </div>
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
 </div>
-{% endif %}
 {% endblock %}
+
+
+
