@@ -1,7 +1,10 @@
 from django.shortcuts import render
-from .models import Product, Product_manufacturer
+from .models import Product, Product_manufacturer, Profile
 from django.views import generic
 from django.db.models import Q
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from .forms import UserForm, ProfileForm
 
 
 def index(request):
@@ -51,3 +54,49 @@ class ProductDetailView(generic.DetailView):
 class ProductManufacturerDetailView(generic.DetailView):
     model = Product_manufacturer
     template_name = 'main/product_manufacturer-detail.html'
+
+
+def profile(request):
+    if not hasattr(request.user, 'profile'):
+        Profile.create_profile(request.user)
+
+    profile = request.user.profile
+
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        password_change_form = PasswordChangeForm(request.user, request.POST)
+
+        if 'password1' in request.POST:
+            if password_change_form.is_valid():
+                user = password_change_form.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, 'Пароль успешно изменен!')
+                return redirect('profile')
+        else:
+            if user_form.is_valid() and profile_form.is_valid():
+                user_form.save()
+                profile_form.save()
+                messages.success(request, 'Данные профиля успешно изменены!')
+                return redirect('profile')
+
+    def register(request):
+        # Остальной код функции регистрации
+
+        if form.is_valid():
+            user = form.save()
+            Profile.create_profile(user)  # Создаем профиль для нового пользователя
+            login(request, user)
+            return redirect('profile')
+
+    user_form = UserForm(instance=request.user)
+    profile_form = ProfileForm(instance=request.user.profile)
+    password_change_form = PasswordChangeForm(request.user)
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'password_change_form': password_change_form,
+    }
+
+    return render(request, 'profile.html', context)
