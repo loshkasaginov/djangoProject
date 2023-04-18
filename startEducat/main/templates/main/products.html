@@ -1,38 +1,21 @@
 {% extends 'main/parent.html' %}
 
-{% load static %}
 {% block content %}
-{% if product_list %}
-{% for product in product_list %}
-<div class="item">
-    <a href="{{ product.get_absolute_url }}">{{ product.product_name }}</a>
-    ({{product.product_price}})
-    {% if product.product_image %}
-    <div>
-        <img class="product-image" src="{{ product.product_image.url }}" alt="{{ product.product_name }}"/>
-    </div>
-    {% endif %}
-</div>
-{% endfor %}
-{% else %}
-<p>There are no products yet</p>
-{% endif %}
-{%endblock%}
+<form method="GET" action="{% url 'products' %}">
+    <input type="text" name="search" placeholder="Поиск по названию" value="{{ search_query }}"/>
+    <button type="submit">Поиск</button>
+</form>
 
-{% block endpage %}
-{% if is_paginated %}
-<div class="pagination">
-          <span class="page-links">
-              {% if page_obj.has_previous %}
-                  <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
-              {% endif %}
-              <span class="page-current">
-                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-              </span>
-              {% if page_obj.has_next %}
-                  <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
-              {% endif %}
-          </span>
+<div class="products-container">
+    {% for product in products %}
+    <div class="product-card">
+        <h3>{{ product.product_name }}</h3>
+        <p>{{ product.product_manufacturer }}</p>
+        <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}" class="product-image"/>
+        <a href="{{ product.get_absolute_url }}">Подробнее</a>
+    </div>
+    {% empty %}
+    <p>По вашему запросу ничего не найдено.</p>
+    {% endfor %}
 </div>
-{% endif %}
-{%endblock%}
+{% endblock %}
