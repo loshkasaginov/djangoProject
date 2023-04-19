@@ -1,14 +1,19 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import DetailView
+
 from .models import Product, Product_manufacturer, Profile
 from django.views import generic
 from django.db.models import Q
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash, login
 from .forms import UserForm, ProfileForm
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Product, Review
+from .forms import ReviewForm
 
 
 def index(request):
@@ -85,6 +90,22 @@ def profile(request):
     return render(request, 'accounts/profile.html', context)
 
 
+@login_required
+def add_review(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.product = product
+            review.save()
+            return redirect(product.get_absolute_url())
+    else:
+        form = ReviewForm()
+    return render(request, 'main/add_review.html', {'form': form, 'product': product})
+
+
 class Products(generic.ListView):
     model = Product
     template_name = 'main/products.html'
@@ -110,5 +131,47 @@ class ProductManufacturerDetailView(generic.DetailView):
     model = Product_manufacturer
     template_name = 'main/product_manufacturer-detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['reviews'] = Review.objects.filter(product=self.object)
+        context['form'] = ReviewForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = ReviewForm(request.POST)
+        self.object = self.get_object()
+        if form.is_valid():
+            new_review = form.save(commit=False)
+            new_review.user = request.user
+            new_review.product = self.object
+            new_review.save()
+            return redirect(request.path)
+        else:
+            context = self.get_context_data(**kwargs)
+            context['form'] = form
+            return render(request, self.template_name, context)
 
 
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'main/product-detail.html'
+    context_object_name = 'product'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['reviews'] = Review.objects.filter(product=self.object)
+        context['form'] = ReviewForm()
+        return context
+
+
+@login_required
+def add_review(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.product = product
+            review.save()
+    return redirect('product-detail', pk=product.pk)

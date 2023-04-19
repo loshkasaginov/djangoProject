@@ -3,6 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin
 from .models import Product_manufacturer, Product
+from .models import Review
 
 
 class ProductmanufacturerAdmin(admin.ModelAdmin):
@@ -19,6 +20,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 admin.site.register(Product_manufacturer, ProductmanufacturerAdmin)
 admin.site.register(Product, ProductAdmin)
+admin.site.register(Review)
 
 # "/"
 # "/about"

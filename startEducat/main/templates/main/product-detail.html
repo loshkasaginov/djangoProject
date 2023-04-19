@@ -11,6 +11,7 @@
         <p>{{ product.product_description }}</p>
         <p>Производитель: {{ product.product_manufacturer }}</p>
         <p>Цена: {{ product.product_price }}</p>
+        <p>Средний рейтинг: {{ product.average_rating }}</p>
         <a href="{% url 'add_to_cart' product.pk %}">Добавить в корзину</a>
     </div>
     <div id="imageModal" class="modal">
@@ -18,7 +19,22 @@
         <img class="modal-content" id="modalImage">
     </div>
 </div>
+
+<div class="reviews-container">
+    <h2>Отзывы</h2>
+    <form method="POST" action="{% url 'add_review' product.pk %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Оставить отзыв</button>
+    </form>
+    {% for review in reviews %}
+    <div class="review">
+        <p><strong>{{ review.user.username }}:</strong> {{ review.comment }}</p>
+        <p>Оценка: {{ review.rating }}</p>
+        <p>Дата: {{ review.date_added }}</p>
+    </div>
+    {% empty %}
+    <p>Нет отзывов.</p>
+    {% endfor %}
+</div>
 {% endblock %}
-
-
-

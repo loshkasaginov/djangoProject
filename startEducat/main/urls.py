@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import re_path
 from .views import profile
+from .views import add_review
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -11,6 +12,7 @@ urlpatterns = [
     path('products/', views.Products.as_view(), name='products'),
     path('profile/', views.profile, name='profile'),
     path('register/', views.register, name='register'),
+    path('product/<int:pk>/add_review/', add_review, name='add_review'),
     re_path(r'^product/(?P<pk>.*)$', views.ProductDetailView.as_view(), name='product-detail'),
     re_path(r'^product_manufacturer/(?P<pk>.*)$', views.ProductManufacturerDetailView.as_view(),
             name='product_manufacturer-detail'),

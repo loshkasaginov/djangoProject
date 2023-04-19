@@ -1,0 +1,10 @@
+{% extends 'main/parent.html' %}
+
+{% block content %}
+<h1>Добавить отзыв для {{ product.product_name }}</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Добавить отзыв</button>
+</form>
+{% endblock %}
