@@ -13,6 +13,8 @@
         <p>{{ product.product_manufacturer }}</p>
         <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}" class="product-image"/>
         <a href="{{ product.get_absolute_url }}">Подробнее</a>
+        <a href="{% url 'add_to_cart' product.pk %}">Добавить в корзину</a>
+
     </div>
     {% empty %}
     <p>По вашему запросу ничего не найдено.</p>

@@ -54,3 +54,14 @@ class Profile(models.Model):
     def create_profile(cls, user):
         profile = cls(user=user)
         profile.save()
+
+
+class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    rating = models.PositiveSmallIntegerField(choices=[(i, i) for i in range(1, 6)], default=5)
+    comment = models.TextField(blank=True, null=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.product.product_name} - {self.rating}"

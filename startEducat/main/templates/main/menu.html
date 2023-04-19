@@ -8,4 +8,6 @@
     {% else %}
     <a href="{% url 'login' %}">Войти</a>
     {% endif %}
+    <a href="{% url 'cart' %}">Корзина ({{ cart_items_count }})</a>
 </nav>
+

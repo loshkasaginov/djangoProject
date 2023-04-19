@@ -11,6 +11,7 @@
         <p>{{ product.product_description }}</p>
         <p>Производитель: {{ product.product_manufacturer }}</p>
         <p>Цена: {{ product.product_price }}</p>
+        <a href="{% url 'add_to_cart' product.pk %}">Добавить в корзину</a>
     </div>
     <div id="imageModal" class="modal">
         <span class="close">&times;</span>

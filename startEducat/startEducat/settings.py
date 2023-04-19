@@ -32,6 +32,7 @@ LOGIN_REDIRECT_URL = 'profile'
 # Application definition
 
 INSTALLED_APPS = [
+    'cart',
     'main',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -64,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'cart.context_processors.cart_items_count',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
