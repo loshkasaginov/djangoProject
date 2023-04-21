@@ -1,19 +1,24 @@
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import DetailView
-
-from .models import Product, Product_manufacturer, Profile
-from django.views import generic
 from django.db.models import Q
+from django.http import JsonResponse
+
+from .models import Profile
+from django.views import generic
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash, login
+from django.contrib.auth import update_session_auth_hash
 from .forms import UserForm, ProfileForm
-from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Product, Review
+from .models import Review
 from .forms import ReviewForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import DetailView
+from .models import Product, Product_manufacturer, PurchasedProduct
+from .forms import OrderForm
+
+
+def ProductManufacturerDetailView(request):
+    return render(request, 'main/about.html', )
 
 
 def index(request):
@@ -33,6 +38,7 @@ def product_list(request):
 def product_detail(request, pk):
     product = Product.objects.get(pk=pk)
     return render(request, 'main/product-detail.html', {'product': product})
+
 
 
 def about(request):
@@ -106,10 +112,48 @@ def add_review(request, pk):
     return render(request, 'main/add_review.html', {'form': form, 'product': product})
 
 
+def create_order(request):
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            if request.user.is_authenticated:
+                order.user = request.user
+            order.save()
+
+            # Здесь мы добавляем товары из корзины в таблицу PurchasedProduct и удаляем их из таблицы Product
+            cart_items = request.session.get('cart', {})
+            for product_id, quantity in cart_items.items():
+                product = Product.objects.get(pk=product_id)
+                for _ in range(quantity):
+                    PurchasedProduct.objects.create(user=request.user if request.user.is_authenticated else None,
+                                                    product=product)
+                    product.delete()
+
+            # Очищаем корзину
+            request.session['cart'] = {}
+
+            messages.success(request, 'Заказ успешно оформлен!')
+            return redirect('index')
+    else:
+        if request.user.is_authenticated:
+            initial_data = {
+                'country': request.user.profile.country,
+                'city': request.user.profile.city,
+                'email': request.user.email,
+            }
+            form = OrderForm(initial=initial_data)
+        else:
+            form = OrderForm()
+
+    return render(request, 'main/create_order.html', {'form': form})
+
+
 class Products(generic.ListView):
     model = Product
     template_name = 'main/products.html'
     context_object_name = 'products'
+    paginate_by = 10
 
     def get_queryset(self):
         search_query = self.request.GET.get('search', '')
@@ -122,36 +166,6 @@ class Products(generic.ListView):
         return queryset
 
 
-class ProductDetailView(generic.DetailView):
-    model = Product
-    template_name = 'main/product-detail.html'
-
-
-class ProductManufacturerDetailView(generic.DetailView):
-    model = Product_manufacturer
-    template_name = 'main/product_manufacturer-detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['reviews'] = Review.objects.filter(product=self.object)
-        context['form'] = ReviewForm()
-        return context
-
-    def post(self, request, *args, **kwargs):
-        form = ReviewForm(request.POST)
-        self.object = self.get_object()
-        if form.is_valid():
-            new_review = form.save(commit=False)
-            new_review.user = request.user
-            new_review.product = self.object
-            new_review.save()
-            return redirect(request.path)
-        else:
-            context = self.get_context_data(**kwargs)
-            context['form'] = form
-            return render(request, self.template_name, context)
-
-
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'main/product-detail.html'
@@ -162,6 +176,27 @@ class ProductDetailView(DetailView):
         context['reviews'] = Review.objects.filter(product=self.object)
         context['form'] = ReviewForm()
         return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        product = self.object
+
+        # Check if the request is for adding a product to the cart
+        if 'quantity' in request.POST:
+            quantity = int(request.POST.get('quantity'))
+            if quantity <= product.quantity:
+                cart = request.session.get('cart', {})
+                cart[str(product.pk)] = cart.get(str(product.pk), 0) + quantity
+                request.session['cart'] = cart
+                return JsonResponse({"success": True})
+            else:
+                return JsonResponse({"success": False, "error": "Товара недостаточно на складе"})
+        else:
+            # ... Handle other types of POST requests here
+            return JsonResponse({"success": False, "error": "Неизвестный тип запроса"})
+
+
+
 
 
 @login_required

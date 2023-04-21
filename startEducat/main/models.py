@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.db.models import Avg
+import datetime
 
 
 class Product_manufacturer(models.Model):
@@ -27,13 +28,15 @@ class Product(models.Model):
         verbose_name = "продукт"
         verbose_name_plural = "продукты"
 
-    product_name = models.CharField(max_length=100, help_text="Enter product name", verbose_name="продукт")
-    product_description = models.TextField(help_text="Enter cpu description", verbose_name="описание продукта")
+    product_name = models.CharField(max_length=100, help_text="введите название продукта", verbose_name="продукт")
+    product_description = models.TextField(help_text="введите описание продукта", verbose_name="описание продукта")
     product_manufacturer = models.ForeignKey('product_manufacturer', on_delete=models.CASCADE,
-                                             verbose_name="внешняя ссылка на производителя")
+                                             verbose_name="проозводитель")
     product_price = models.IntegerField(verbose_name="цена")
     time_product_created = models.DateField(auto_now_add=True, verbose_name="время создания записи")
     product_image = models.ImageField(upload_to='products/', null=True, blank=True)
+    quantity = models.PositiveIntegerField(default=1, help_text="введите количество товара",
+                                           verbose_name="количество товара")
 
     def get_absolute_url(self):
         return reverse('product-detail', args=[str(self.id)])
@@ -62,6 +65,16 @@ class Profile(models.Model):
         profile.save()
 
 
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    country = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    email = models.EmailField()
+
+    def __str__(self):
+        return f'Order #{self.pk} by {self.user or "Guest"}'
+
+
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -71,3 +84,12 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.product.product_name} - {self.rating}"
+
+
+class PurchasedProduct(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    purchase_date = models.DateTimeField(default=datetime.datetime.now)
+
+    def __str__(self):
+        return f'PurchasedProduct #{self.pk} by {self.user or "Guest"}'

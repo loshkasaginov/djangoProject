@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('scroll', function () {
         const currentScroll = window.pageYOffset;
         if (currentScroll <= 0) {
-            menu.style.display = 'none';
+            menu.style.display = 'block';
         } else if (currentScroll < previousScroll) {
             menu.style.display = 'block';
         } else {

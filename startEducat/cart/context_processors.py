@@ -7,5 +7,5 @@ def cart_items_count(request):
         cart_items = CartItem.objects.filter(user=request.user)
         items_count = sum(item.quantity for item in cart_items)
     else:
-        items_count = 0
+        items_count = sum(item['quantity'] for item in request.session.get('cart_items', []))
     return {'cart_items_count': items_count}

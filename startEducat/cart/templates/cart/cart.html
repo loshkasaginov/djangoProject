@@ -16,7 +16,9 @@
     <tbody>
     {% for item in cart_items %}
     <tr>
-        <td>{{ item.product.product_name }}</td>
+        <td>
+            <a href="{{ item.product.get_absolute_url }}">{{ item.product.product_name }}</a>
+        </td>
         <td>{{ item.product.product_price }}</td>
         <td>{{ item.quantity }}</td>
         <td>{{ item.get_total_price }}</td>
@@ -37,4 +39,5 @@
 {% else %}
 <p>Ваша корзина пуста.</p>
 {% endif %}
+<a href="{% url 'create_order' %}" class="btn btn-primary">Оформить заказ</a>
 {% endblock %}
